@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pierrot Rafanomezantsoa - IT Student</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#1e293b',
+                        accent: '#06b6d4',
+                        glow: '#22d3ee',
+                        text: '#f8fafc'
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                        'slide-up': 'slide-up 0.5s ease-out',
+                        'gradient': 'gradient 3s ease infinite',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.6); }
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .text-gradient {
+            background: linear-gradient(45deg, #06b6d4, #22d3ee, #0ea5e9);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+        }
+        .glass {
+            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-border {
+            border: 2px solid #06b6d4;
+            box-shadow: 0 0 10px #06b6d4, inset 0 0 10px rgba(6, 182, 212, 0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-primary via-secondary to-slate-900 text-text overflow-x-hidden" x-data="portfolioApp()">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass" x-show="!isMenuOpen" x-transition>
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-accent to-glow p-0.5">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23065f6e'/%3E%3Ctext x='50' y='55' font-family='Arial' font-size='40' fill='%2306b6d4' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E" alt="Pierrot" class="w-full h-full rounded-full object-cover">
+                    </div>
+                    <span class="text-xl font-bold text-gradient">Pierrot Rafanomezantsoa</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <template x-for="item in menuItems" :key="item.id">
+                        <a :href="'#' + item.id" 
+                           class="text-text/80 hover:text-accent transition-all duration-300 hover:scale-105"
+                           @click="activeSection = item.id"
+                           :class="activeSection === item.id ? 'text-accent border-b-2 border-accent' : ''"
+                           x-text="item.name"></a>
+                    </template>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button @click="isMenuOpen = !isMenuOpen" class="md:hidden text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div x-show="isMenuOpen" x-transition class="fixed inset-0 z-50 bg-primary/95 backdrop-blur-lg">
+        <div class="flex flex-col items-center justify-center h-full space-y-8">
+            <button @click="isMenuOpen = false" class="absolute top-6 right-6 text-3xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <template x-for="item in menuItems" :key="item.id">
+                <a :href="'#' + item.id" 
+                   @click="isMenuOpen = false; activeSection = item.id"
+                   class="text-2xl hover:text-accent transition-colors"
+                   x-text="item.name"></a>
+            </template>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-accent/30 rounded-full animate-float"></div>
+            <div class="absolute bottom-32 right-20 w-24 h-24 bg-glow/30 rounded-full animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/3 w-16 h-16 bg-accent/20 rounded-full animate-float" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <div class="animate-slide-up" x-show="true" x-transition>
+                <div class="mb-8">
+                    <div class="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-accent to-glow p-1 animate-pulse-glow">
+                        <img src="assets/images/pdp.jpg" alt="Pierrot" class="w-full h-full rounded-full object-cover">
+                    </div>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    I am an <span class="text-gradient">IT Student</span>
+                    <br>from Madagascar
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-text/60 mb-8 max-w-4xl mx-auto leading-relaxed">
+                    Final-year electronics engineering student at École Supérieure Polytechnique d'Antananarivo and SESAME program alumnus, I develop expertise at the intersection of electronics, artificial intelligence, and data analysis. Passionate about intelligent technologies, I design innovative solutions combining AI, IoT, robotics, process automation, and application development. I am deepening my skills in Machine Learning and AI Engineering as well as in the design and development of electronic circuits and firmware. In parallel, I am training in system and network administration to strengthen my skills in infrastructure and technical integration.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="#work" class="px-8 py-4 bg-gradient-to-r from-accent to-glow rounded-full text-primary font-bold hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-accent/50">
+                        Discover my projects
+                    </a>
+                    <a href="tel:+261349193169" class="flex items-center space-x-2 text-accent hover:text-glow transition-colors">
+                        <i class="fas fa-phone"></i>
+                        <span>(261) 34 91 93 169</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-secondary/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16" x-intersect="animateSection('services')">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    <span class="text-accent">Services</span> I Offer
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <template x-for="(service, index) in services" :key="index">
+                    <div class="glass rounded-2xl p-8 hover:scale-105 transition-all duration-300 hover:neon-border group">
+                        <div class="text-4xl mb-6 text-accent group-hover:animate-bounce" x-html="service.icon"></div>
+                        <h3 class="text-2xl font-bold mb-4" x-text="service.title"></h3>
+                        <p class="text-text/80" x-text="service.description"></p>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="work" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    My <span class="text-gradient">Recent Projects</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <template x-for="(project, index) in projects" :key="index">
+                    <div class="glass rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 group">
+                        <div class="h-48 bg-gradient-to-br from-accent/20 to-glow/20 flex items-center justify-center">
+                            <div class="text-6xl text-accent group-hover:animate-bounce" x-html="project.icon"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold mb-3" x-text="project.title"></h3>
+                            <p class="text-text/80 mb-4" x-text="project.description"></p>
+                            <a :href="project.link" target="_blank" 
+                               class="inline-flex items-center space-x-2 text-accent hover:text-glow transition-colors">
+                                <span>Learn more</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-secondary/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    My <span class="text-accent">Background</span> & Experience
+                </h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Education -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-accent">Education</h3>
+                    <div class="space-y-6">
+                        <template x-for="(edu, index) in education" :key="index">
+                            <div class="glass rounded-xl p-6 hover:scale-102 transition-all duration-300">
+                                <h4 class="text-xl font-bold mb-2" x-text="edu.title"></h4>
+                                <p class="text-accent mb-2" x-text="edu.institution + ' (' + edu.period + ')'"></p>
+                                <p class="text-text/80" x-text="edu.description"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Experience -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-8 text-accent">Experience</h3>
+                    <div class="space-y-6">
+                        <template x-for="(exp, index) in experience" :key="index">
+                            <div class="glass rounded-xl p-6 hover:scale-102 transition-all duration-300">
+                                <h4 class="text-xl font-bold mb-2" x-text="exp.title"></h4>
+                                <p class="text-accent mb-2" x-text="exp.company + ' (' + exp.period + ')'"></p>
+                                <p class="text-text/80" x-text="exp.description"></p>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="mt-8">
+                        <a href="assets/CV_Pierrot.pdf" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent to-glow rounded-full text-primary font-bold hover:scale-105 transition-all duration-300">
+                            <i class="fas fa-download mr-2"></i>
+                            Download my CV
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-secondary/50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Interested in <span class="text-accent">collaboration</span>?
+                </h2>
+                <p class="text-xl text-text/80">Let's talk about your project</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Contact Info -->
+                <div class="space-y-6">
+                    <template x-for="(contact, index) in contactInfo" :key="index">
+                        <div class="glass rounded-xl p-6 hover:scale-105 transition-all duration-300">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-2xl text-accent" x-html="contact.icon"></div>
+                                <div>
+                                    <h4 class="font-bold" x-text="contact.label"></h4>
+                                    <a :href="contact.link" class="text-accent hover:text-glow transition-colors" x-text="contact.value"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-2xl font-bold mb-6">Send me a message</h3>
+                    <form @submit.prevent="submitForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Name</label>
+                            <input x-model="form.name" type="text" required
+                                   class="w-full px-4 py-3 bg-primary/50 border border-text/20 rounded-lg focus:border-accent focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input x-model="form.email" type="email" required
+                                   class="w-full px-4 py-3 bg-primary/50 border border-text/20 rounded-lg focus:border-accent focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Message</label>
+                            <textarea x-model="form.message" rows="5" required
+                                      class="w-full px-4 py-3 bg-primary/50 border border-text/20 rounded-lg focus:border-accent focus:outline-none transition-colors resize-none"></textarea>
+                        </div>
+                    
+                        <button type="submit" 
+                                :disabled="isSending"
+                                class="w-full px-6 py-3 bg-gradient-to-r from-accent to-glow rounded-lg text-primary font-bold hover:scale-105 transition-all duration-300 disabled:opacity-50">
+                            <span x-text="isSending ? 'Sending...' : 'Send message'"></span>
+                        </button>
+                    
+                        <p class="mt-2 text-center text-sm text-accent" x-text="submitMessage"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-primary">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center space-x-6 mb-8">
+                <template x-for="social in socialLinks" :key="social.name">
+                    <a :href="social.url" target="_blank" 
+                       class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center hover:bg-accent hover:text-primary transition-all duration-300 hover:scale-110">
+                        <i :class="social.icon"></i>
+                    </a>
+                </template>
+            </div>
+            <p class="text-text/60">© 2024 Pierrot Rafanomezantsoa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button @click="window.scrollTo({top: 0, behavior: 'smooth'})"
+            x-show="showScrollTop"
+            x-transition
+            class="fixed bottom-6 right-6 w-12 h-12 bg-gradient-to-r from-accent to-glow rounded-full flex items-center justify-center text-primary hover:scale-110 transition-all duration-300 z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init('5ajH_wRsycCMZy8qA');
+        
+        function portfolioApp() {
+            return {
+                isMenuOpen: false,
+                activeSection: 'home',
+                showScrollTop: false,
+                form: {
+                    name: '',
+                    email: '',
+                    message: ''
+                },
+                submitMessage: '',
+                isSending: false,
+
+                menuItems: [
+                    { id: 'home', name: 'Home' },
+                    { id: 'services', name: 'Services' },
+                    { id: 'work', name: 'Projects' },
+                    { id: 'about', name: 'About' },
+                    { id: 'contact', name: 'Contact' }
+                ],
+                
+                services: [
+                    {
+                        icon: '<i class="fas fa-robot"></i>',
+                        title: 'Automation Agent Creation WITH n8n',
+                        description: 'Design and development of autonomous agents for business process automation. Using n8n to integrate and automate no-code workflows, improving efficiency and reducing costs.'
+                    },
+                    {
+                        icon: '<i class="fab fa-facebook-messenger"></i>',
+                        title: 'Messenger ChatBot Creation',
+                        description: 'Custom Messenger chatbot creation with ManyChat to automate customer interactions. Professional solutions to instantly respond to inquiries, generate leads, and improve user engagement.'
+                    },
+                    {
+                        icon: '<i class="fas fa-code"></i>',
+                        title: 'Portfolio Development - Frontend/Web',
+                        description: 'Creation, design, and maintenance of modern, user-friendly, and high-performance websites. Expertise in HTML5, CSS3, JavaScript, and frameworks like Bootstrap or Tailwind CSS.'
+                    },
+                    {
+                        icon: '<i class="fas fa-robot"></i>',
+                        title: 'Automation & Embedded Systems Service',
+                        description: 'Development of industrial automation solutions and embedded systems, including microcontroller programming, sensor/actuator integration, and performance optimization.'
+                    },
+                    {
+                        icon: '<i class="fas fa-microchip"></i>',
+                        title: 'PCB Design & Conception',
+                        description: 'Creation of electronic schematics and printed circuit board (PCB) routing, taking into account manufacturing and reliability constraints for electronic projects.'
+                    },
+                    {
+                        icon: '<i class="fas fa-tools"></i>',
+                        title: 'Electronic Design & Instrumentation',
+                        description: 'Development and implementation of measuring instruments and test systems for collecting and analyzing accurate data in industrial or research applications.'
+                    }
+                ],
+                
+                projects: [
+                    {
+                        icon: '<i class="fas fa-robot"></i>',
+                        title: 'n8n Automation',
+                        description: 'Automatic data extraction (Google Maps, web scraping), collaborative CRM with email management, PDF document reading assistant, task and calendar manager, and beauty salon booking bot. Examples on my LinkedIn profile',
+                        link: 'https://www.linkedin.com/posts/pierrot-rafanomezantsoa-229098184_et-si-vous-pouviez-extraire-en-quelques-activity-7381624719281913856-Lfyc?utm_source=share&utm_medium=member_desktop&rcm=ACoAACtwUEEBmyunOsvo2ibaRMPOYTAOcr1KAQo'
+                    },
+                    {
+                        icon: '<i class="fas fa-robot"></i>',
+                        title: 'Autonomous AgRobot - Engineering League',
+                        description: 'Autonomous navigation solution for agricultural robot using ROS, OpenCV, and Gazebo Harmonic. Precision system for fertilizer application in maize fields with irregular terrain management and optimized path planning.',
+                        link: 'https://drive.google.com/drive/folders/1GfLa-iKpJbBhnK0sZeZGrxlG74dkKeq9?usp=sharing'
+                    },
+                    {
+                        icon: '<i class="fab fa-java"></i>',
+                        title: 'Java Project',
+                        description: 'Multi-domain enterprise management application with intuitive user interface and relational database.',
+                        link: 'https://drive.google.com/file/d/1tJ5-x2a8iZC-B5iFH9JHyfTjujKR46zN/view?usp=sharing'
+                    },
+                    {
+                        icon: '<i class="fas fa-robot"></i>',
+                        title: 'Green Guardian Robot',
+                        description: 'Real-time plant disease detection device. Advanced solution for modern agriculture.',
+                        link: 'https://drive.google.com/file/d/1ZhENrqMb7lA4cagg06rFs7QpF0ctizy0/view'
+                    },
+                    {
+                        icon: '<i class="fas fa-bolt"></i>',
+                        title: 'Electronics Project',
+                        description: 'Programmable voltage generator to optimize electronic system output.',
+                        link: '#'
+                    },
+                    {
+                        icon: '<i class="fas fa-plug"></i>',
+                        title: 'Connected Electric Meter',
+                        description: 'Real-time electricity consumption monitoring system with mobile and web application for management, security, and needs forecasting.',
+                        link: 'https://drive.google.com/drive/folders/1BQxKmorv7-jKqNngnxQQ85Bmec1M_5RB?usp=sharing'
+                    },
+                    {
+                        icon: '<i class="fas fa-seedling"></i>',
+                        title: 'InnovAgri',
+                        description: 'Intelligent digital platform integrating AI for agricultural assistance, knowledge sharing, and personalized recommendations.',
+                        link: '#'
+                    }
+                ],
+
+                education: [
+                    {
+                        title: 'Master in Electronic and Automation Engineering',
+                        institution: 'École Supérieure Polytechnique d\'Antananarivo',
+                        period: '2024 - Ongoing',
+                        description: 'Comprehensive courses in electronics and automation, robotics, and hardware programming.'
+                    },
+                    {
+                        title: 'System Administration and Network Training',
+                        institution: 'ArkeUp Academy of the Indian Ocean',
+                        period: 'March - November 2024',
+                        description: 'Official NetAcad.com program: CCNA Badges Obtained'
+                    },
+                    {
+                        title: 'Bachelor\'s Degree in Electronics and Computer Science',
+                        institution: 'École Supérieure Polytechnique d\'Antananarivo',
+                        period: '2020 - 2023',
+                        description: 'Comprehensive training in electronics, controls, applied computer science, signals and systems.'
+                    },
+                    {
+                        title: 'Preparatory Year',
+                        institution: 'SESAME Program',
+                        period: '2019',
+                        description: 'Vice Valedictorian of the 2019 class. Training in personal development and professional orientation.'
+                    },
+                    {
+                        title: 'Scientific Baccalaureate Series C',
+                        institution: 'Lycée Sainte Géneviève Vohipeno',
+                        period: '2018',
+                        description: 'Highest Honors'
+                    }
+                ],
+                
+                experience: [
+                    {
+                        title: 'Mobile App Developer Intern',
+                        company: 'Digital Training Center',
+                        period: 'September - November 2024',
+                        description: 'Mobile application design and development with Flutter, mastering basics and user interface design, backend communication, local data management'
+                    },
+                    {
+                        title: 'Logistics Administration Intern',
+                        company: 'Esanandro',
+                        period: 'December 2022 - February 2023',
+                        description: 'Responsible for customer correspondence, logistics vehicle inspection, purchase order entry and validation.'
+                    },
+                    {
+                        title: 'Card Designer Intern',
+                        company: 'eTech Madagascar / UGD',
+                        period: 'July-August 2021',
+                        description: 'Student visa card design within the Digital Governance Unit.'
+                    },
+                    {
+                        title: 'Developer Intern',
+                        company: 'SOFTIMAD MADAGASCAR',
+                        period: 'October 2019',
+                        description: 'Web Designer and Developer (observation internship).'
+                    }
+                ],
+                
+                contactInfo: [
+                    {
+                        icon: '<i class="fas fa-envelope"></i>',
+                        label: 'Email',
+                        value: 'pierrotp19.aps1b@gmail.com',
+                        link: 'mailto:pierrotp19.aps1b@gmail.com'
+                    },
+                    {
+                        icon: '<i class="fab fa-facebook"></i>',
+                        label: 'Facebook',
+                        value: 'Pierrot Rafanomezantsoa',
+                        link: 'https://www.facebook.com/pierrot.rafanomezantsoa.ndremandia'
+                    },
+                    {
+                        icon: '<i class="fab fa-linkedin"></i>',
+                        label: 'LinkedIn',
+                        value: 'Pierrot Rafanomezantsoa',
+                        link: 'https://www.linkedin.com/in/pierrot-rafanomezantsoa-229098184/'
+                    }
+                ],
+                
+                socialLinks: [
+                    { name: 'Facebook', icon: 'fab fa-facebook-f', url: 'https://www.facebook.com/pierrot.rafanomezantsoa.ndremandia'},
+                    { name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/pierrot-rafanomezantsoa-229098184/' },
+                    { name: 'Email', icon: 'fas fa-envelope', url: 'mailto:pierrotp19.aps1b@gmail.com' }
+                ],
+
+                init() {
+                    window.addEventListener('scroll', () => {
+                        this.showScrollTop = window.pageYOffset > 300;
+                        
+                        const sections = ['home', 'services', 'work', 'about', 'contact'];
+                        const scrollPos = window.pageYOffset + 100;
+                        
+                        sections.forEach(section => {
+                            const element = document.getElementById(section);
+                            if (element && scrollPos >= element.offsetTop && scrollPos < element.offsetTop + element.offsetHeight) {
+                                this.activeSection = section;
+                            }
+                        });
+                    });
+
+                    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            const target = document.querySelector(this.getAttribute('href'));
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        });
+                    });
+                },
+
+                submitForm() {
+                    if (this.isSending) return;
+                    this.isSending = true;
+
+                    const templateParams = {
+                        user_name: this.form.name,
+                        user_email: this.form.email,
+                        user_message: this.form.message
+                    };
+
+                    emailjs.send('service_ccses6w', 'template_00vcuuj', templateParams)
+                        .then(() => {
+                            this.submitMessage = 'Message sent successfully ✅';
+                            this.form = { name: '', email: '', message: '' };
+                            setTimeout(() => this.submitMessage = '', 5000);
+                        })
+                        .catch(() => {
+                            this.submitMessage = 'Error sending message ❌';
+                            setTimeout(() => this.submitMessage = '', 5000);
+                        })
+                        .finally(() => {
+                            this.isSending = false;
+                        });
+                },
+
+                animateSection(section) {
+                    console.log('Animating section:', section);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
